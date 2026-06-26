@@ -17,8 +17,17 @@ def retrieve(question):
     results = collection.query(
     query_embeddings=[query_vector],
     n_results=5)
+
+    chunks = []
+    for i in range(len(results["documents"][0])):
+        chunks.append({
+            "text": results["documents"][0][i],
+            "source": results["metadatas"][0][i]["source"],
+            "page": results["metadatas"][0][i]["page"]
+        })
     
-    return results
+    return chunks
+    
 
 if __name__ == "__main__":
     from ingest import ingest
