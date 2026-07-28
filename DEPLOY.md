@@ -1,31 +1,26 @@
 # Deploying DocTalk to HuggingFace Spaces
 
-The Space runs both services in one container: FastAPI internally on :8000,
-Streamlit public on :7860 (`Dockerfile.spaces` + `start.sh`).
+The Space runs everything in one container. FastAPI runs internally on port 8000 and Streamlit is the public app on port 7860. `Dockerfile.spaces` and `start.sh` handle this.
 
-## Steps (~10 minutes)
+## Steps, about 10 minutes
 
-1. Create the Space: huggingface.co → New Space → name `doctalk` →
-   SDK: **Docker** → Blank template → Public.
+1. Make the Space: huggingface.co, New Space, name it `doctalk`, pick **Docker** as the SDK, blank template, public.
 
-2. Add your API key as a secret (never commit it):
-   Space → Settings → Variables and secrets → New secret →
-   name `OPENAI_API_KEY`, value `sk-...`
+2. Add your OpenAI key as a secret so it never touches the repo:
+   Space page, Settings, Variables and secrets, New secret. Name it `OPENAI_API_KEY`, paste your `sk-...` key.
 
-3. Clone the Space repo and copy the project in:
+3. Clone the Space repo and copy the project into it:
    ```bash
    git clone https://huggingface.co/spaces/<your-username>/doctalk hf-doctalk
    cd hf-doctalk
-   # copy from your project: src/ api.py ui.py requirements.txt start.sh
-   #                         data/pdfs/ chroma_db/ Dockerfile.spaces
+   # copy these over from the project:
+   #   src/  api.py  ui.py  requirements.txt  start.sh
+   #   data/pdfs/  chroma_db/  Dockerfile.spaces
    mv Dockerfile.spaces Dockerfile
    ```
-   Note: `chroma_db/` must be committed to the Space so the index ships with
-   the app (Space storage is ephemeral — anything uploaded at runtime is lost
-   on restart, but the baked-in index always works).
+   Yes, `chroma_db/` gets committed here even though it's gitignored on GitHub. Space storage is wiped on every restart, so the index has to ship inside the image or the app boots with nothing.
 
-4. Space README front-matter — create `README.md` in the Space repo starting
-   with exactly:
+4. The Space needs a README.md that starts with this exact block (this is how Spaces knows what to run):
    ```yaml
    ---
    title: DocTalk
@@ -38,18 +33,21 @@ Streamlit public on :7860 (`Dockerfile.spaces` + `start.sh`).
    ---
    ```
 
-5. Push:
+5. Push it:
    ```bash
    git add -A
    git commit -m "deploy DocTalk"
    git push
    ```
-   The Space builds (~5 min) and goes live at
+   The build takes around 5 minutes, then the app is live at
    `https://huggingface.co/spaces/<your-username>/doctalk`
 
-## Sanity checks after deploy
+## After it's live
 
-- Ask "What does RVI stand for in average-reward Q-learning?" → should cite rp4.pdf
-- Toggle reranking off and compare sources
-- Check logs (Space → Logs) if the app doesn't start — most common issue is a
-  missing `OPENAI_API_KEY` secret
+- Upload a PDF and ask something, make sure answers cite the right file and page
+- If it won't start, check the Logs tab. Nine times out of ten it's the missing `OPENAI_API_KEY` secret
+- Anything uploaded to the live Space disappears on restart. That's expected, storage is ephemeral
+
+## A note on auth
+
+Pushing to HuggingFace over HTTPS asks for your HF username and a token (huggingface.co, Settings, Access Tokens, make one with write permission). Use the token as the password.
