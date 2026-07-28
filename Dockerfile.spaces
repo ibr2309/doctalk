@@ -1,0 +1,21 @@
+# Single-container image for HuggingFace Spaces (Docker SDK).
+# Runs the FastAPI backend internally and exposes Streamlit on port 7860.
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ src/
+COPY api.py ui.py start.sh ./
+COPY data/pdfs/ data/pdfs/
+COPY chroma_db/ chroma_db/
+
+# Spaces runs as a non-root user; make everything writable
+RUN chmod +x start.sh && mkdir -p /app/.cache && chmod -R 777 /app
+ENV HF_HOME=/app/.cache
+
+EXPOSE 7860
+
+CMD ["./start.sh"]

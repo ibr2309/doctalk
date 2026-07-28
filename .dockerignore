@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.git/
+chroma_db/
+chroma_db_test/
+data/
+eval_results.txt
+*.md
