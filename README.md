@@ -24,7 +24,7 @@ I built the whole RAG pipeline from scratch, no LangChain. Every layer (chunking
                     └─────────────────────────────────────────────┘
 ```
 
-Stack: Python, PyMuPDF, sentence-transformers, ChromaDB, OpenAI gpt-4o-mini, FastAPI, Streamlit, Docker.
+Stack: Python, PyMuPDF, sentence-transformers, ChromaDB, OpenAI gpt-4o-mini, FastAPI, Streamlit.
 
 ## Design decisions worth explaining
 
@@ -53,12 +53,6 @@ echo OPENAI_API_KEY=sk-... > .env
 python ingest_all.py         # build the vector DB from data/pdfs/
 uvicorn api:app --reload     # backend on :8000
 streamlit run ui.py          # UI on :8501 (second terminal)
-```
-
-Or with Docker:
-
-```bash
-docker compose up --build
 ```
 
 UI at http://localhost:8501, API docs at http://localhost:8000/docs.
