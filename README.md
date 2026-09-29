@@ -2,7 +2,7 @@
 
 Ask questions about your PDFs in plain English and get answers grounded in the actual documents, with source and page citations.
 
-I built the whole RAG pipeline from scratch, no LangChain. Every layer (chunking, embedding, retrieval, reranking, prompting) is my own code, so I can explain exactly why each piece works the way it does.
+I built the whole RAG pipeline from scratch, no LangChain. Every layer (chunking, embedding, retrieval, reranking, prompting).
 
 **85% strict / 87.5% weighted accuracy on a 20-question eval set**, up from 70% before I added two-stage retrieval. Details below.
 
