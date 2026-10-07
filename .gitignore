@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+.env
+chroma_db/
+chroma_db_test/
+WALKTHROUGH.md
+
+data/pdfs/*
+!data/pdfs/rp1.pdf
+!data/pdfs/rp2.pdf
+!data/pdfs/rp3.pdf
+!data/pdfs/rp4.pdf
+!data/pdfs/rp5.pdf
